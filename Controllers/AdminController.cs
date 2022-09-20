@@ -1,0 +1,164 @@
+﻿using CourseSignupSystem.Interfaces;
+using CourseSignupSystem.Models;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace CourseSignupSystem.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AdminController : ControllerBase
+    {
+        private readonly IAdmin _adminSvc;
+
+        public AdminController(IAdmin adminSvc)
+        {
+            _adminSvc = adminSvc;
+        }
+        ///student
+        [HttpPost]
+        [Route("AddStudent")]
+        public async Task<ActionResult<int>> AddStudent(UserModel userModel)
+        {
+            try
+            {
+                await _adminSvc.AddStudent(userModel);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            return Ok(1);
+        }
+
+        [HttpGet]
+        [Route("ListStudent")]
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetStudent()
+        {
+            var user = await _adminSvc.GetStudent();
+            return user;
+        }
+
+        [HttpPost]
+        [Route("EditStudent")]
+        public async Task<ActionResult<int>> EditStudent( UserModel userModel)
+        {
+            try
+            {
+                await _adminSvc.EditStudent(userModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(2);
+        }
+
+        [HttpDelete]
+        [Route("DeleteStudent/{id}")]
+        public async Task<ActionResult<int>> DeleteStudent(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteStudent(id);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
+        //tìm kiếm học sinh sinh viên
+        [HttpGet]
+        [Route("StudentId")]
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetStudent(UserModel userModel)
+        {
+            var getalluser = await _adminSvc.GetStudent(userModel);
+            return getalluser;
+        }
+
+
+        //Teacher
+        [HttpPost]
+        [Route("AddTeacher")]
+        public async Task<ActionResult<int>> AddTeacher(UserModel userModel)
+        {
+            try
+            {
+                await _adminSvc.AddTeacher(userModel);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Ok(1);
+        }
+
+        [HttpGet]
+        [Route("ListTeacher")]
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetTeacher()
+        {
+            var user = await _adminSvc.GetTeacher();
+            return user;
+        }
+
+        [HttpPost]
+        [Route("EditTeacher")]
+        public async Task<ActionResult<int>> EditTeacher(UserModel userModel)
+        {
+            try
+            {
+                await _adminSvc.EditTeacher(userModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteTeacher/{id}")]
+        public async Task<ActionResult<int>> DeleteTeacher(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteStudent(id);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
+        //Tìm kiếm giáo viên
+        [HttpGet]
+        [Route("TeacherId")]
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetTeacher(UserModel userModel)
+        {
+            var getalluser = await _adminSvc.GetStudent(userModel);
+            return getalluser;
+        }
+    }
+}

@@ -7,5 +7,8 @@
 
         public string UserTeacherCode { get; set; }
         public string UserPassword { get; set; }
+
+        public string UserFisrtName { get; set; }
+        public string UserPhone { get; set; }
     }
 }
