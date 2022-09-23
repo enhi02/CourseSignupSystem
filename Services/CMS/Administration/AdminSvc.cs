@@ -20,11 +20,37 @@ namespace CourseSignupSystem.Services.CMS.Administration
             _enCode = encode;
         }
 
+        //User
         public async Task<UserModel> GetUser(int id)
         {
             UserModel user = null;
             user = await _context.UserModels.FindAsync(id);
             return user;
+        }
+
+
+        //Khóa Học
+        public async Task<CourseModel> GetCourse(int id)
+        {
+            CourseModel course = null;
+            course = await _context.CourseModels.FindAsync(id);
+            return course;
+        }
+
+        //Role
+        public async Task<int> AddRole(RoleModel roleModel)
+        {
+            int ret = 0;
+            try
+            {
+                _context.Add(roleModel);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
         }
 
         ///Student
@@ -110,7 +136,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
         }
 
         ///Teacher
-        public async Task<List<UserModel>> GetTeacher()
+        public async Task<List<UserModel>>  GetTeacher()
         {
             var user = await _context.UserModels.Where(u => u.UserRole == 1).ToListAsync();
             return user;
@@ -194,9 +220,153 @@ namespace CourseSignupSystem.Services.CMS.Administration
         //}
         public async Task<List<UserModel>> GetTeacher(UserModel userModel)
         {
-            var user = await _context.UserModels.Where(e => e.UserRole == 3).Where(u => u.UserTeacherCode == userModel.UserTeacherCode ||
+            var user = await _context.UserModels.Where(e => e.UserRole == 1).Where(u => u.UserTeacherCode == userModel.UserTeacherCode ||
                u.UserFisrtName == userModel.UserFisrtName || u.UserPhone == userModel.UserPhone || u.UserEmail == userModel.UserEmail).ToListAsync();
             return user;
         }
+
+        //Khóa Học
+        public async Task<List<CourseModel>> ListKhoaHoc()
+        {
+            var list = await _context.CourseModels.ToListAsync();
+            return list;
+        }
+
+        public async Task<int> AddKhoaHoc(CourseModel courseModel)
+        {
+            int ret = 0;
+            try
+            {
+               await _context.AddAsync(courseModel);
+                await _context.SaveChangesAsync();
+
+                ret = courseModel.CourseId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+
+        }
+
+        public async Task<int> EditKhoaHoc(CourseModel courseModel)
+        {
+            int ret = 0;
+            try
+            {
+                CourseModel course = null;
+                course = await GetCourse(courseModel.CourseId);
+
+                course.CourseCode = courseModel.CourseCode;
+                course.CourseName = courseModel.CourseName;
+                course.CourseStartTime = courseModel.CourseStartTime;
+                course.CourseEndTime = courseModel.CourseEndTime;
+
+                _context.Update(course);
+                await _context.SaveChangesAsync();
+                ret = courseModel.CourseId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> DeleteKhoaHoc(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var course = await GetCourse(id);
+                _context.Remove(course);
+                await _context.SaveChangesAsync();
+                ret = course.CourseId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        //tìm kiếm khóa học
+
+        //Department
+        public async Task<List<DepartmentModel>> GetDepartment()
+        {
+            var department = await _context.DepartmentModels.ToListAsync();
+            return department;
+        }
+
+        public async Task<List<DepartmentModel>> GetDepartmentId(DepartmentModel departmentModel)
+        {
+            var department = await _context.DepartmentModels.Where(d => d.DepartmentName == departmentModel.DepartmentName).ToListAsync();
+            return department;
+        }
+
+        public async Task<DepartmentModel> GetDepartmentId(int id)
+        {
+            DepartmentModel department = null;
+            department = await _context.DepartmentModels.FindAsync(id);
+            return department;
+        }
+
+        public async Task<int> AddDepartment(DepartmentModel departmentModel)
+        {
+            int ret = 0;
+            try
+            {
+                await _context.AddAsync(departmentModel);
+                await _context.SaveChangesAsync();
+                ret = departmentModel.DepartmentId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> EditDepartment(DepartmentModel departmentModel)
+        {
+            int ret = 0;
+            try
+            {
+                DepartmentModel depart = null;
+                depart = await GetDepartmentId(departmentModel.DepartmentId);
+
+                depart.DepartmentName = departmentModel.DepartmentName;
+
+                _context.Update(depart);
+                await _context.SaveChangesAsync();
+                ret = departmentModel.DepartmentId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> DeleteDepartment(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var depart = await GetDepartmentId(id);
+                _context.Remove(depart);
+                await _context.SaveChangesAsync();
+                ret = depart.DepartmentId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        //
     }
 }
