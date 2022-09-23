@@ -22,5 +22,12 @@ namespace CourseSignupSystem.Interfaces
         Task<int> DeleteTeacher(int id);
         //tìm kiếm giáo viên
         Task<List<UserModel>> GetTeacher(UserModel userModel);
+
+        //Khóa Học
+        Task<List<CourseModel>> ListKhoaHoc();
+        Task<int> AddKhoaHoc(CourseModel courseModel);
+        Task<int> EditKhoaHoc(CourseModel courseModel);
+        Task<int> DeleteKhoaHoc(int id);
+        //tìm kiếm khóa học
     }
 }

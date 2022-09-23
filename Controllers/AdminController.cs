@@ -157,8 +157,73 @@ namespace CourseSignupSystem.Controllers
         [Route("TeacherId")]
         public async Task<ActionResult<IEnumerable<UserModel>>> GetTeacher(UserModel userModel)
         {
-            var getalluser = await _adminSvc.GetStudent(userModel);
+            var getalluser = await _adminSvc.GetTeacher(userModel);
             return getalluser;
         }
+
+        //Khóa Học
+        [HttpGet]
+        [Route("ListKhoaHoc")]
+        public async Task<ActionResult<IEnumerable<CourseModel>>> ListKhoaHoc()
+        {
+            var course = await _adminSvc.ListKhoaHoc();
+            return course;
+        }
+
+        [HttpPost]
+        [Route("AddKhoaHoc")]
+        public async Task<ActionResult<int>> AddKhoaHoc(CourseModel courseModel)
+        {
+            try
+            {
+                var id = await _adminSvc.AddKhoaHoc(courseModel);
+                courseModel.CourseId = id;
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return Ok(1);
+        }
+
+        [HttpPost]
+        [Route("EditKhoaHoc")]
+        public async Task<ActionResult<int>> EditKhoaHoc(CourseModel courseModel)
+        {
+            try
+            {
+                await _adminSvc.EditKhoaHoc(courseModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteKhoaHoc/{id}")]
+        public async Task<ActionResult<int>> DeleteKhoaHoc(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteKhoaHoc(id);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
+        //tìm kiếm khóa học
+
     }
 }
