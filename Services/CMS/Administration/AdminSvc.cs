@@ -37,6 +37,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return course;
         }
 
+<<<<<<< HEAD
         //Role
         public async Task<int> AddRole(RoleModel roleModel)
         {
@@ -53,6 +54,8 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return ret;
         }
 
+=======
+>>>>>>> 40c902cfa6e06aff13c1844709aaadef4866589c
         ///Student
         public async Task<List<UserModel>> GetStudent()
         {
@@ -293,6 +296,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
 
         //tìm kiếm khóa học
 
+<<<<<<< HEAD
         //Department
         public async Task<List<DepartmentModel>> GetDepartment()
         {
@@ -368,5 +372,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
         }
 
         //
+=======
+>>>>>>> 40c902cfa6e06aff13c1844709aaadef4866589c
     }
 }

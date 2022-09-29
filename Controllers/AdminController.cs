@@ -243,6 +243,7 @@ namespace CourseSignupSystem.Controllers
 
         //tìm kiếm khóa học
 
+<<<<<<< HEAD
         //Department
         [HttpGet]
         [Route("ListDepartment")]
@@ -313,5 +314,7 @@ namespace CourseSignupSystem.Controllers
         }
 
         //
+=======
+>>>>>>> 40c902cfa6e06aff13c1844709aaadef4866589c
     }
 }

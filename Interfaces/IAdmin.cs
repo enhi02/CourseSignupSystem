@@ -32,6 +32,7 @@ namespace CourseSignupSystem.Interfaces
         Task<int> EditKhoaHoc(CourseModel courseModel);
         Task<int> DeleteKhoaHoc(int id);
         //tìm kiếm khóa học
+<<<<<<< HEAD
 
         //Department
         Task<List<DepartmentModel>> GetDepartment();
@@ -42,5 +43,7 @@ namespace CourseSignupSystem.Interfaces
         Task<int> DeleteDepartment(int id);
 
         //
+=======
+>>>>>>> 40c902cfa6e06aff13c1844709aaadef4866589c
     }
 }
