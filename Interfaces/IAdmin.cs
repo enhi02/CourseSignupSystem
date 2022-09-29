@@ -8,7 +8,11 @@ namespace CourseSignupSystem.Interfaces
     public interface IAdmin 
     {
         //role
+        Task<List<RoleModel>> GetRole();
+        Task<RoleModel> roleId(int id);
+        Task<int> EditRole(RoleModel roleModel);
         Task<int> AddRole(RoleModel roleModel);
+        Task<int> DeleteRole(int id);
 
         //Student
         Task<int> AddStudent(UserModel userModel);
@@ -33,6 +37,7 @@ namespace CourseSignupSystem.Interfaces
         Task<int> DeleteKhoaHoc(int id);
         //tìm kiếm khóa học
 
+
         //Department
         Task<List<DepartmentModel>> GetDepartment();
         Task<List<DepartmentModel>> GetDepartmentId(DepartmentModel departmentModel);
@@ -41,6 +46,22 @@ namespace CourseSignupSystem.Interfaces
         Task<int> EditDepartment(DepartmentModel departmentModel);
         Task<int> DeleteDepartment(int id);
 
-        //
+        //Subject (môn học)
+        Task<List<SubjectModel>> GetSubject();
+        Task<List<SubjectModel>> GetSubjectAll();
+        Task<List<SubjectModel>> GetSubjectId(SubjectModel subjectModel);
+        Task<SubjectModel> GetSubjectId(int id);
+        Task<int> AddSubject(SubjectModel subjectModel);
+        Task<int> EditSubject(SubjectModel subjectModel);
+        Task<int> DeleteSubject(int id);
+
+        // Class (lớp học)
+        Task<List<ClassModel>> GetLopHoc();
+        Task<List<UserModel>> GetLopHocStudent(ClassModel classModel);
+        Task<List<ClassModel>> GetLopHocId(ClassModel classModel);
+        Task<ClassModel> GetLopHocId(int id);
+        Task<int> AddLopHoc(ClassModel classModel);
+        Task<int> EditLopHoc(ClassModel classModel);
+        Task<int> DeleteLopHoc(int id);
     }
 }

@@ -37,7 +37,38 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return course;
         }
 
+
         //Role
+        public async Task<List<RoleModel>> GetRole()
+        {
+            var role = await _context.RoleModels.ToListAsync();
+            return role;
+        }
+        public async Task<RoleModel> roleId(int id)
+        {
+
+            var role = await _context.RoleModels.FindAsync(id);
+            return role;
+        }
+        public async Task<int> EditRole(RoleModel roleModel)
+        {
+            int ret = 0;
+            try
+            {
+                RoleModel role = null;
+                role = await roleId(roleModel.RoleId);
+                role.RoleName = roleModel.RoleName;
+
+                _context.Update(role);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
         public async Task<int> AddRole(RoleModel roleModel)
         {
             int ret = 0;
@@ -51,7 +82,25 @@ namespace CourseSignupSystem.Services.CMS.Administration
                 ret = 0;
             }
             return ret;
-        }
+        }// thêm role
+
+        public async Task<int> DeleteRole(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var role = await roleId(id);
+                _context.Remove(role);
+                await _context.SaveChangesAsync();
+                ret = role.RoleId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }//xóa role
+
 
         ///Student
         public async Task<List<UserModel>> GetStudent()
@@ -367,6 +416,189 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return ret;
         }
 
-        //
+        //Subject (môn học)
+        public async Task<List<SubjectModel>> GetSubject()
+        {
+            var subjects = await _context.SubjectModels.ToListAsync();
+            return subjects;
+        }
+
+        public async Task<List<SubjectModel>> GetSubjectAll()
+        {
+            var subjects = await _context.SubjectModels.Include(s => s.courseModel).
+                                    Include(s => s.departmentModel).ToListAsync();
+            return subjects;
+        }
+
+        public async Task<List<SubjectModel>> GetSubjectId(SubjectModel subjectModel)
+        {
+            var subjects = await _context.SubjectModels.Where(s => s.SubjectName == subjectModel.SubjectName ||
+                                                  s.SubjectCode == subjectModel.SubjectCode).ToListAsync();
+            return subjects;
+        }
+
+        public async Task<SubjectModel> GetSubjectId(int id)
+        {
+            SubjectModel subject = null;
+            subject = await _context.SubjectModels.FindAsync(id);
+            return subject;
+        }
+
+        public async Task<int> AddSubject(SubjectModel subjectModel)
+        {
+            int ret = 0;
+            try
+            {
+                await _context.AddAsync(subjectModel);
+                await _context.SaveChangesAsync();
+                ret = subjectModel.SubjectId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> EditSubject(SubjectModel subjectModel)
+        {
+            int ret = 0;
+            try
+            {
+                SubjectModel subject = null;
+                subject = await GetSubjectId(subjectModel.SubjectId);
+
+                subject.SubjectName = subjectModel.SubjectName;
+                subject.SubjectCode = subjectModel.SubjectCode;
+                subject.SubjectCourse = subjectModel.SubjectCourse;
+                subject.SubjectDepartment = subjectModel.SubjectDepartment;
+
+                _context.Update(subject);
+                await _context.SaveChangesAsync();
+                ret = subjectModel.SubjectId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> DeleteSubject(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var subject = await GetSubjectId(id);
+                _context.Remove(subject);
+                await _context.SaveChangesAsync();
+                ret = subject.SubjectId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        // Class (lớp học)
+        public async Task<List<ClassModel>> GetLopHoc()
+        {
+            List<ClassModel> list = new List<ClassModel>();
+            list = await _context.ClassModels.ToListAsync();
+            return list;
+        }
+
+        public async Task<List<UserModel>> GetLopHocStudent(ClassModel classModel)
+        {
+            List<UserModel> listStudent = new List<UserModel>();
+
+            listStudent = await _context.UserModels.Where(s => s.UserClass == classModel.ClassName).ToListAsync();
+            return listStudent;
+        }
+
+        public async Task<List<ClassModel>> GetLopHocId(ClassModel classModel)
+        {
+            List<ClassModel> list = new List<ClassModel>();
+            list = await _context.ClassModels.Where(c => c.ClassCode == classModel.ClassCode ||
+                            c.ClassName == classModel.ClassName).ToListAsync();
+            return list;
+        }
+
+        public async Task<ClassModel> GetLopHocId(int id)
+        {
+            var classModel = await _context.ClassModels.FindAsync(id);
+            return classModel;
+        }
+
+        public async Task<int> AddLopHoc(ClassModel classModel)
+        {
+            int ret = 0;
+            try
+            {
+                var courseName = await _context.CourseModels.FindAsync(classModel.ClassCourse);
+
+                classModel.ClassCourseName = courseName.CourseName;
+
+                await _context.AddAsync(classModel);
+                await _context.SaveChangesAsync();
+                ret = classModel.ClassId;
+            }
+            catch (Exception)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> EditLopHoc(ClassModel classModel)
+        {
+            int ret = 0;
+            try
+            {
+                ClassModel classs = null;
+                classs = await GetLopHocId(classModel.ClassId);
+
+                classs.ClassName = classModel.ClassName;
+                classs.ClassCode = classModel.ClassCode;
+                classs.ClassSchoolYear = classModel.ClassSchoolYear;
+                classs.ClassDescription = classModel.ClassDescription;
+                classs.ClassQuantity = classModel.ClassQuantity;
+                classs.ClassStatus = classModel.ClassStatus;
+                classs.ClassTuition = classModel.ClassTuition;
+
+                var courseName = await _context.CourseModels.FindAsync(classModel.ClassCourse);
+
+                classs.ClassCourseName = courseName.CourseName;
+
+                _context.Update(classs);
+                await _context.SaveChangesAsync();
+                ret = classModel.ClassId;
+            }
+            catch (Exception)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> DeleteLopHoc(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var classs = await GetLopHocId(id);
+                _context.Remove(classs);
+                await _context.SaveChangesAsync();
+                ret = classs.ClassId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+
     }
 }

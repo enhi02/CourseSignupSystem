@@ -22,6 +22,14 @@ namespace CourseSignupSystem.Controllers
         }
 
         //role
+        [HttpGet]
+        [Route("GetRole")]
+        public async Task<ActionResult<IEnumerable<RoleModel>>> GetRole()
+        {
+            var role = await _adminSvc.GetRole();
+            return role;
+        }
+
         [HttpPost]
         [Route("AddRole")]
         public async Task<ActionResult<int>> AddRole(RoleModel roleModel)
@@ -35,6 +43,44 @@ namespace CourseSignupSystem.Controllers
             {
                 return BadRequest(ex.Message);
             }
+            return Ok(1);
+        }
+
+        [HttpPost]
+        [Route("EditRole")]
+        public async Task<ActionResult<int>> EditRole(RoleModel roleModel)
+        {
+            try
+            {
+                var id = await _adminSvc.EditRole(roleModel);
+                roleModel.RoleId = id;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteRole/{id}")]
+        public async Task<ActionResult<int>> DeleteRole(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteRole(id);
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
             return Ok(1);
         }
 
@@ -243,6 +289,7 @@ namespace CourseSignupSystem.Controllers
 
         //tìm kiếm khóa học
 
+
         //Department
         [HttpGet]
         [Route("ListDepartment")]
@@ -312,6 +359,161 @@ namespace CourseSignupSystem.Controllers
             return Ok(1);
         }
 
-        //
+        //Subject (môn học)
+        [HttpGet]
+        [Route("ListSubject")]
+        public async Task<ActionResult<IEnumerable<SubjectModel>>> ListSubject()
+        {
+            var list = await _adminSvc.GetSubject();
+            return list;
+        }//danh sách môn học
+
+        [HttpGet]
+        [Route("ListSubjectAll")]
+        public async Task<ActionResult<IEnumerable<SubjectModel>>> ListAllSubject()
+        {
+            var list = await _adminSvc.GetSubjectAll();
+            return list;
+        }//show hết môn học
+
+        [HttpGet]
+        [Route("SubjectId")]
+        public async Task<ActionResult<IEnumerable<SubjectModel>>> ListSubjectId(SubjectModel subjectModel)
+        {
+            var list = await _adminSvc.GetSubjectId(subjectModel);
+            return list;
+        }//tìm kiếm môn học
+
+        [HttpPost]
+        [Route("AddSubject")]
+        public async Task<ActionResult<int>> AddSubject(SubjectModel subjectModel)
+        {
+            try
+            {
+                var id = await _adminSvc.AddSubject(subjectModel);
+                subjectModel.SubjectId = id;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }// thêm môn học
+
+        [HttpPost]
+        [Route("EditSubject")]
+        public async Task<ActionResult<int>> EditSubject(SubjectModel subjectModel) //sửa môn học
+        {
+            try
+            {
+                await _adminSvc.EditSubject(subjectModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteSubject/{id}")]
+        public async Task<ActionResult<int>> DeleteSubject(int id) //xóa môn học
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteSubject(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
+        // Class (lớp học)
+        [HttpGet]
+        [Route("ListLopHoc")]
+        public async Task<ActionResult<IEnumerable<ClassModel>>> ListLopHoc()
+        {
+            var list = await _adminSvc.GetLopHoc();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("ListLopHocStudent")]
+        public async Task<ActionResult<IEnumerable<UserModel>>> ListLopHocStudent(ClassModel classModel)
+        {
+            var list = await _adminSvc.GetLopHocStudent(classModel);
+            return list;
+        }
+
+        [HttpGet]
+        [Route("LopHocId")]
+        public async Task<ActionResult<IEnumerable<ClassModel>>> LopHocId(ClassModel classModel)
+        {
+            var list = await _adminSvc.GetLopHocId(classModel);
+            return list;
+        }
+
+        [HttpPost]
+        [Route("AddLopHoc")]
+        public async Task<ActionResult<int>> AddLopHoc(ClassModel classModel)
+        {
+            try
+            {
+                var id = await _adminSvc.AddLopHoc(classModel);
+                classModel.ClassId = id;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(new{
+            retText ="that bai"
+            });
+        }
+
+        [HttpPost]
+        [Route("EditLopHoc")]
+        public async Task<ActionResult<int>> EditLopHoc(ClassModel classModel)
+        {
+            try
+            {
+                await _adminSvc.EditLopHoc(classModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteLopHoc/{id}")]
+        public async Task<ActionResult<int>> DeleteLopHoc(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteLopHoc(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
     }
 }
