@@ -289,7 +289,6 @@ namespace CourseSignupSystem.Controllers
 
         //tìm kiếm khóa học
 
-
         //Department
         [HttpGet]
         [Route("ListDepartment")]
@@ -358,6 +357,7 @@ namespace CourseSignupSystem.Controllers
 
             return Ok(1);
         }
+
 
         //Subject (môn học)
         [HttpGet]
@@ -515,5 +515,167 @@ namespace CourseSignupSystem.Controllers
             return Ok(1);
         }
 
+        //Score Type
+        [HttpGet]
+        [Route("ListScoreType")]
+        public async Task<ActionResult<IEnumerable<ScoreTypeModel>>> ListAllScoreType()
+        {
+            var list = await _adminSvc.GetScoreType();
+            return list;
+        }
+
+        [HttpPost]
+        [Route("AddScoreType")]
+        public async Task<ActionResult<int>> AddScoreType(ScoreTypeModel scoreTypeModel)
+        {
+            try
+            {
+                var id = await _adminSvc.AddScoreType(scoreTypeModel);
+                scoreTypeModel.ScoreTypeId = id;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpPost]
+        [Route("EditScoreType")]
+        public async Task<ActionResult<int>> EditScoreType(ScoreTypeModel scoreTypeModel)
+        {
+            try
+            {
+                await _adminSvc.EditScoreType(scoreTypeModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteScoreType/{id}")]
+        public async Task<ActionResult<int>> DeleteScoreType(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteScoreType(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
+        //Score
+        [HttpGet]
+        [Route("ListScore")]
+        public async Task<ActionResult<IEnumerable<ScoreModel>>> ListAllScore()
+        {
+            var list = await _adminSvc.GetScore();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("ListScoreAll")]
+        public async Task<ActionResult<IEnumerable<ScoreModel>>> ListScoreAll()
+        {
+            var list = await _adminSvc.GetScoreAll();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("ScoreId")]
+        public async Task<ActionResult<IEnumerable<ScoreModel>>> ScoreId(ScoreModel scoreModel)
+        {
+            var list = await _adminSvc.GetScoreId(scoreModel);
+            return list;
+        }
+
+        [HttpPost]
+        [Route("AddScore")]
+        public async Task<ActionResult<int>> AddScore(ScoreModel scoreModel)
+        {
+            try
+            {
+                int id = await _adminSvc.AddScore(scoreModel);
+                scoreModel.ScoreId = id;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpPost]
+        [Route("EditScore")]
+        public async Task<ActionResult<int>> EditScore(ScoreModel scoreModel)
+        {
+            try
+            {
+                int id = await _adminSvc.EditScore(scoreModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteScore/{id}")]
+        public async Task<ActionResult<int>> DeleteScore(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteScore(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
+        //Receipts học phí
+        [HttpGet]
+        [Route("ListReceipts")]
+        public async Task<ActionResult<IEnumerable<ReceiptsModel>>> ListReceipts()
+        {
+            var list = await _adminSvc.GetReceipts();
+            return list;
+        }
+
+        [HttpPost]
+        [Route("AddReceipts")]
+        public async Task<ActionResult<int>> AddReceipts(ReceiptsModel receiptsModel)
+        {
+            try
+            {
+                int id = await _adminSvc.AddReceipts(receiptsModel);
+                receiptsModel.ReceiptsId = id;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
     }
 }

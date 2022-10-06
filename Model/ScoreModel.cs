@@ -29,6 +29,10 @@ namespace CourseSignupSystem.Models
         [Display(Name = "Số Cột Điểm Bắt Buộc")]
         public int ScoreQuantityRequired { get; set; }
 
+        [Display(Name = "Tên Loại Điểm")]
+        [StringLength(20)]
+        public string ScoreTypeName { get; set; }
+
         public ScoreTypeModel scoreTypeModel { get; set; }
 
         public SubjectModel subjectModel { get; set; }

@@ -46,6 +46,7 @@ namespace CourseSignupSystem.Interfaces
         Task<int> EditDepartment(DepartmentModel departmentModel);
         Task<int> DeleteDepartment(int id);
 
+
         //Subject (môn học)
         Task<List<SubjectModel>> GetSubject();
         Task<List<SubjectModel>> GetSubjectAll();
@@ -63,5 +64,24 @@ namespace CourseSignupSystem.Interfaces
         Task<int> AddLopHoc(ClassModel classModel);
         Task<int> EditLopHoc(ClassModel classModel);
         Task<int> DeleteLopHoc(int id);
+         
+        //Score Type
+        Task<List<ScoreTypeModel>> GetScoreType();
+        Task<ScoreTypeModel> GetScoreTypeId(int id);
+        Task<int> AddScoreType(ScoreTypeModel scoreTypeModel);
+        Task<int> EditScoreType(ScoreTypeModel scoreTypeModel);
+        Task<int> DeleteScoreType(int id);
+
+        //Score
+        Task<int> AddScore(ScoreModel scoreModel);
+        Task<List<ScoreModel>> GetScore();
+        Task<List<ScoreModel>> GetScoreAll();
+        Task<List<ScoreModel>> GetScoreId(ScoreModel scoreModel);
+        Task<int> EditScore(ScoreModel scoreModel);
+        Task<int> DeleteScore(int id);
+
+        //Receipts học phí
+        Task<List<ReceiptsModel>> GetReceipts();
+        Task<int> AddReceipts(ReceiptsModel receiptsModel);
     }
 }

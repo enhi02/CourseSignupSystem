@@ -38,7 +38,6 @@ namespace CourseSignupSystem.Services.CMS.Administration
         }
 
 
-        //Role
         public async Task<List<RoleModel>> GetRole()
         {
             var role = await _context.RoleModels.ToListAsync();
@@ -100,6 +99,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
             }
             return ret;
         }//xóa role
+
 
 
         ///Student
@@ -416,6 +416,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return ret;
         }
 
+
         //Subject (môn học)
         public async Task<List<SubjectModel>> GetSubject()
         {
@@ -599,6 +600,217 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return ret;
         }
 
+        //Score Type (loại điểm)
+        public async Task<List<ScoreTypeModel>> GetScoreType()
+        {
+            var scoreType = await _context.ScoreTypesModels.ToListAsync();
+            return scoreType;
+        }
 
+        public async Task<ScoreTypeModel> GetScoreTypeId(int id)
+        {
+            ScoreTypeModel scoreType = null;
+            scoreType = await _context.ScoreTypesModels.FindAsync(id);
+            return scoreType;
+        }
+
+        public async Task<int> AddScoreType(ScoreTypeModel scoreTypeModel)
+        {
+            int ret = 0;
+            try
+            {
+                await _context.AddAsync(scoreTypeModel);
+                await _context.SaveChangesAsync();
+                ret = scoreTypeModel.ScoreTypeId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> EditScoreType(ScoreTypeModel scoreTypeModel)
+        {
+            int ret = 0;
+            try
+            {
+                ScoreTypeModel scoreType = null;
+                scoreType = await GetScoreTypeId(scoreTypeModel.ScoreTypeId);
+
+                scoreType.ScoreTypeName = scoreTypeModel.ScoreTypeName;
+                scoreType.ScoreTypeCoefficient = scoreTypeModel.ScoreTypeCoefficient;
+
+                _context.Update(scoreType);
+                await _context.SaveChangesAsync();
+                ret = scoreTypeModel.ScoreTypeId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> DeleteScoreType(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var scoreType = await GetScoreTypeId(id);
+                _context.Remove(scoreType);
+                await _context.SaveChangesAsync();
+                ret = scoreType.ScoreTypeId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        //Score điểm
+        public async Task<List<ScoreModel>> GetScore()
+        {
+            var score = await _context.ScoreModels.ToListAsync();
+            return score;
+        }
+
+        public async Task<List<ScoreModel>> GetScoreAll()
+        {
+            var score = await _context.ScoreModels.Include(s => s.subjectModel).
+                                    Include(s => s.scoreTypeModel).ToListAsync();
+            return score;
+        }
+
+        public async Task<List<ScoreModel>> GetScoreId(ScoreModel scoreModel)
+        {
+            var score = await _context.ScoreModels.Where(s => s.ScoreSubjectName == scoreModel.ScoreSubjectName).ToListAsync();
+            return score;
+        }
+
+        public async Task<ScoreModel> GetScoreId(int id)
+        {
+            ScoreModel score = null;
+            score = await _context.ScoreModels.FindAsync(id);
+            return score;
+        }
+
+        public async Task<int> AddScore(ScoreModel scoreModel)
+        {
+            int ret = 0;
+            try
+            {
+                var ScoreType = await _context.ScoreTypesModels.FindAsync(scoreModel.ScoreType);
+                var ScoreSubject = await _context.SubjectModels.FindAsync(scoreModel.ScoreSubjectId);
+                var ScoreCourse = await _context.CourseModels.FindAsync(ScoreSubject.SubjectCourse);
+
+                scoreModel.ScoreTypeName = ScoreType.ScoreTypeName;
+                scoreModel.ScoreSubjectName = ScoreSubject.SubjectName;
+                scoreModel.ScoreCourse = ScoreCourse.CourseName;
+
+                await _context.AddAsync(scoreModel);
+                await _context.SaveChangesAsync();
+                ret = scoreModel.ScoreId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> EditScore(ScoreModel scoreModel)
+        {
+            int ret = 0;
+            try
+            {
+                ScoreModel score = null;
+                score = await GetScoreId(scoreModel.ScoreId);
+
+                var ScoreType = await _context.ScoreTypesModels.FindAsync(scoreModel.ScoreType);
+                var ScoreSubject = await _context.SubjectModels.FindAsync(scoreModel.ScoreSubjectId);
+                var ScoreCourse = await _context.CourseModels.FindAsync(ScoreSubject.SubjectCourse);
+
+                score.ScoreTypeName = ScoreType.ScoreTypeName;
+                score.ScoreSubjectName = ScoreSubject.SubjectName;
+                score.ScoreCourse = ScoreCourse.CourseName;
+
+                _context.Update(score);
+                await _context.SaveChangesAsync();
+                ret = scoreModel.ScoreId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<int> DeleteScore(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var score = await GetScoreId(id);
+                _context.Remove(score);
+                await _context.SaveChangesAsync();
+                ret = score.ScoreId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        //Receipts học phí
+        public async Task<List<ReceiptsModel>> GetReceipts()
+        {
+            var list = await _context.ReceiptsModels.ToListAsync();
+            return list;
+        }
+        public async Task<int> AddReceipts(ReceiptsModel receiptsModel)
+        {
+            int ret = 0;
+            try
+            {
+                var student = await _context.UserModels.FindAsync(receiptsModel.ReceiptsStudentId);
+                var classs = await _context.ClassModels.FindAsync(student.UserClass);
+                var teacher = await _context.ScheduleModels.Where(s => s.ScheduleClassId == classs.ClassId).FirstOrDefaultAsync();
+
+                receiptsModel.ReceiptsTraining = student.UserFisrtName;
+                receiptsModel.ReceiptsClassName = classs.ClassName;
+                receiptsModel.ReceiptsFee = classs.ClassTuition;
+                receiptsModel.ReceiptsRateFee = classs.ClassTuition;
+                receiptsModel.ReceiptsPayableFee = receiptsModel.ReceiptsFee + receiptsModel.ReceiptsSurcharge;
+
+                if (teacher != null)
+                {
+                    TurnoverModel turnoverModel = new TurnoverModel();
+                    turnoverModel.TurnoverStudentCode = student.UserStudentCode;
+                    turnoverModel.TurnoverStudentName = student.UserFisrtName;
+                    turnoverModel.TurnoverStudentClass = classs.ClassName;
+                    turnoverModel.TurnoverTeacher = teacher.ScheduleTeacherName;
+                    turnoverModel.TurnoverStudyDate = Convert.ToString(teacher.ScheduleOn);
+                    turnoverModel.TurnoverStartDate = teacher.ScheduleStartDate;
+                    turnoverModel.TurnoverEndDate = teacher.ScheduleEndDate;
+                    turnoverModel.TurnoverTuition = classs.ClassTuition;
+
+                    await _context.AddAsync(turnoverModel);
+                    await _context.SaveChangesAsync();
+                }
+                await _context.AddAsync(receiptsModel);
+                await _context.SaveChangesAsync();
+                ret = receiptsModel.ReceiptsId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        //
     }
 }

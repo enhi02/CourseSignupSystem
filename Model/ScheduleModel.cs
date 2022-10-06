@@ -17,7 +17,7 @@ namespace CourseSignupSystem.Models
         public int ScheduleSubject { get; set; }
 
         //[ForeignKey("classModel")]
-        //public int ScheduleClassId { get; set; }
+        public int ScheduleClassId { get; set; }
 
         [StringLength(50)]
         [Display(Name = "Tên Giáo Viên")]

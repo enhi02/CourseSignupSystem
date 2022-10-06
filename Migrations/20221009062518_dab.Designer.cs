@@ -4,14 +4,16 @@ using CourseSignupSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CourseSignupSystem.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221009062518_dab")]
+    partial class dab
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,9 +187,6 @@ namespace CourseSignupSystem.Migrations
 
                     b.Property<DateTime>("Schedule")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("ScheduleClassId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ScheduleClassName")
                         .HasMaxLength(50)
