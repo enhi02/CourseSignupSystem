@@ -37,7 +37,11 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return course;
         }
 
+<<<<<<< HEAD
 
+=======
+<<<<<<< HEAD
+>>>>>>> 960df8d06cca2ef63cded3d48170b53123d10e81
         //Role
         public async Task<List<RoleModel>> GetRole()
         {
@@ -102,6 +106,11 @@ namespace CourseSignupSystem.Services.CMS.Administration
         }//xóa role
 
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> 40c902cfa6e06aff13c1844709aaadef4866589c
+>>>>>>> 960df8d06cca2ef63cded3d48170b53123d10e81
         ///Student
         public async Task<List<UserModel>> GetStudent()
         {
@@ -342,6 +351,10 @@ namespace CourseSignupSystem.Services.CMS.Administration
 
         //tìm kiếm khóa học
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 960df8d06cca2ef63cded3d48170b53123d10e81
         //Department
         public async Task<List<DepartmentModel>> GetDepartment()
         {
@@ -416,6 +429,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return ret;
         }
 
+<<<<<<< HEAD
         //Subject (môn học)
         public async Task<List<SubjectModel>> GetSubject()
         {
@@ -600,5 +614,10 @@ namespace CourseSignupSystem.Services.CMS.Administration
         }
 
 
+=======
+        //
+=======
+>>>>>>> 40c902cfa6e06aff13c1844709aaadef4866589c
+>>>>>>> 960df8d06cca2ef63cded3d48170b53123d10e81
     }
 }
