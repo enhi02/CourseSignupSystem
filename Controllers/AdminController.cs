@@ -289,6 +289,8 @@ namespace CourseSignupSystem.Controllers
 
         //tìm kiếm khóa học
 
+
+
         //Department
         [HttpGet]
         [Route("ListDepartment")]
@@ -653,28 +655,141 @@ namespace CourseSignupSystem.Controllers
             return Ok(1);
         }
 
-        //Receipts học phí
+        //Schedule lịch dạy
         [HttpGet]
-        [Route("ListReceipts")]
-        public async Task<ActionResult<IEnumerable<ReceiptsModel>>> ListReceipts()
+        [Route("ListSchedule")]
+        public async Task<ActionResult<IEnumerable<ScheduleModel>>> ListSchedule()
         {
-            var list = await _adminSvc.GetReceipts();
+            var list = await _adminSvc.GetSchedule();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("ScheduleId")]
+        public async Task<ActionResult<IEnumerable<ScheduleModel>>> ScheduleId(ScheduleModel scheduleModel)
+        {
+            var list = await _adminSvc.ScheduleId(scheduleModel);
             return list;
         }
 
         [HttpPost]
-        [Route("AddReceipts")]
-        public async Task<ActionResult<int>> AddReceipts(ReceiptsModel receiptsModel)
+        [Route("AddSchedule")]
+        public async Task<ActionResult<int>> AddSchedule(ScheduleModel scheduleModel)
         {
             try
             {
-                int id = await _adminSvc.AddReceipts(receiptsModel);
-                receiptsModel.ReceiptsId = id;
+                int id = await _adminSvc.AddSchedule(scheduleModel);
+                scheduleModel.ScheduleId = id;
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
+            return Ok(1);
+        }
+
+        [HttpPost]
+        [Route("EditSchedule")]
+        public async Task<ActionResult<int>> EditSchedule(ScheduleModel scheduleModel)
+        {
+            try
+            {
+                await _adminSvc.EditSchedule(scheduleModel);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteSchedule/{id}")]
+        public async Task<ActionResult<int>> DeleteSchedule(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteSchedule(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
+            return Ok(1);
+        }
+
+        //ngày nghỉ
+        [HttpGet]
+        [Route("ListScheduleHoliDay")]
+        public async Task<ActionResult<IEnumerable<ScheduleHoliday>>> ListScheduleHoliday()
+        {
+            var list = await _adminSvc.GetScheduleHoliday();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("ScheduleHolidayId")]
+        public async Task<ActionResult<IEnumerable<ScheduleHoliday>>> ScheduleHolidayId(ScheduleHoliday scheduleHoliday)
+        {
+            var list = await _adminSvc.ScheduleHolidayId(scheduleHoliday);
+            return list;
+        }
+
+        [HttpPost]
+        [Route("AddScheduleHoliday")]
+        public async Task<ActionResult<int>> AddScheduleHoliday(ScheduleHoliday scheduleHoliday)
+        {
+            try
+            {
+                int id = await _adminSvc.AddScheduleHoliday(scheduleHoliday);
+                scheduleHoliday.ScheduleHolidayId = id;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpPost]
+        [Route("EditScheduleHoliday")]
+        public async Task<ActionResult<int>> EditScheduleHoliday(ScheduleHoliday scheduleHoliday)
+        {
+            try
+            {
+                await _adminSvc.EditScheduleHoliday(scheduleHoliday);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(1);
+        }
+
+        [HttpDelete]
+        [Route("DeleteScheduleHoliday/{id}")]
+        public async Task<ActionResult<int>> DeleteScheduleHoliday(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                await _adminSvc.DeleteScheduleHoliday(id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(-1);
+            }
+
             return Ok(1);
         }
     }

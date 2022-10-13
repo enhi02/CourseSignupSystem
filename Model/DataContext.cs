@@ -26,5 +26,6 @@ namespace CourseSignupSystem.Models
         public DbSet<ScoreModel> ScoreModels { get; set; }
         public DbSet<ScoreTypeModel> ScoreTypesModels { get; set; }
 
+        public DbSet<ScheduleHoliday> ScheduleHolidays { get; set; }
     }
 }

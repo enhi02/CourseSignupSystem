@@ -4,14 +4,16 @@ using CourseSignupSystem.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CourseSignupSystem.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221011035036_das")]
+    partial class das
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,32 +176,6 @@ namespace CourseSignupSystem.Migrations
                     b.HasKey("RoleId");
 
                     b.ToTable("Role");
-                });
-
-            modelBuilder.Entity("CourseSignupSystem.Models.ScheduleHoliday", b =>
-                {
-                    b.Property<int>("ScheduleHolidayId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("ScheduleHolidayEndDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ScheduleHolidayName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("ScheduleHolidayReason")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<DateTime>("ScheduleHolidayStartDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("ScheduleHolidayId");
-
-                    b.ToTable("ScheduleHoliday");
                 });
 
             modelBuilder.Entity("CourseSignupSystem.Models.ScheduleModel", b =>

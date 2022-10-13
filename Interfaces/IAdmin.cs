@@ -46,7 +46,6 @@ namespace CourseSignupSystem.Interfaces
         Task<int> EditDepartment(DepartmentModel departmentModel);
         Task<int> DeleteDepartment(int id);
 
-
         //Subject (môn học)
         Task<List<SubjectModel>> GetSubject();
         Task<List<SubjectModel>> GetSubjectAll();
@@ -64,7 +63,8 @@ namespace CourseSignupSystem.Interfaces
         Task<int> AddLopHoc(ClassModel classModel);
         Task<int> EditLopHoc(ClassModel classModel);
         Task<int> DeleteLopHoc(int id);
-         
+
+
         //Score Type
         Task<List<ScoreTypeModel>> GetScoreType();
         Task<ScoreTypeModel> GetScoreTypeId(int id);
@@ -83,5 +83,23 @@ namespace CourseSignupSystem.Interfaces
         //Receipts học phí
         Task<List<ReceiptsModel>> GetReceipts();
         Task<int> AddReceipts(ReceiptsModel receiptsModel);
+
+        //Schedule lịch dạy
+        Task<List<ScheduleModel>> GetSchedule();
+        Task<List<ScheduleModel>> ScheduleId(ScheduleModel scheduleModel);
+        Task<ScheduleModel> ScheduleId(int id);
+        Task<int> AddSchedule(ScheduleModel scheduleModel);
+        Task<bool> EditSchedule(ScheduleModel scheduleModel);
+        Task<int> DeleteSchedule(int id);
+
+        //ngày nghỉ
+        Task<List<ScheduleHoliday>> GetScheduleHoliday();
+        Task<List<ScheduleHoliday>> ScheduleHolidayId(ScheduleHoliday scheduleHoliday);
+        Task<ScheduleHoliday> ScheduleHolidayId(int id);
+        Task<int> AddScheduleHoliday(ScheduleHoliday scheduleHoliday);
+        Task<bool> EditScheduleHoliday(ScheduleHoliday scheduleHoliday);
+        Task<int> DeleteScheduleHoliday(int id);
+        //
+
     }
 }

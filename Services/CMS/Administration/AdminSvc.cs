@@ -1,9 +1,13 @@
 ﻿using CourseSignupSystem.Interfaces;
 using CourseSignupSystem.Models;
 using CourseSignupSystem.Models.ViewModel;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -102,7 +106,6 @@ namespace CourseSignupSystem.Services.CMS.Administration
 
 
 
-        ///Student
         public async Task<List<UserModel>> GetStudent()
         {
             var user = await _context.UserModels.Where(u => u.UserRole == 2).ToListAsync();
@@ -342,6 +345,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
 
         //tìm kiếm khóa học
 
+
         //Department
         public async Task<List<DepartmentModel>> GetDepartment()
         {
@@ -415,7 +419,6 @@ namespace CourseSignupSystem.Services.CMS.Administration
             }
             return ret;
         }
-
 
         //Subject (môn học)
         public async Task<List<SubjectModel>> GetSubject()
@@ -632,6 +635,7 @@ namespace CourseSignupSystem.Services.CMS.Administration
 
         public async Task<int> EditScoreType(ScoreTypeModel scoreTypeModel)
         {
+
             int ret = 0;
             try
             {
@@ -811,6 +815,193 @@ namespace CourseSignupSystem.Services.CMS.Administration
             return ret;
         }
 
+        //Schedule lịch dạy
+        public async Task<List<ScheduleModel>> GetSchedule()
+        {
+            var list = await _context.ScheduleModels.ToListAsync();
+            return list;
+        }
+
+        public async Task<List<ScheduleModel>> ScheduleId(ScheduleModel scheduleModel)
+        {
+            List<ScheduleModel> list = new List<ScheduleModel>();
+            list = await _context.ScheduleModels.Where(l => l.ScheduleTeacherName == scheduleModel.ScheduleTeacherName ||
+                            l.ScheduleSubjectName == scheduleModel.ScheduleSubjectName).ToListAsync();
+            return list;
+        }
+        public async Task<ScheduleModel> ScheduleId(int id)
+        {
+            var list = await _context.ScheduleModels.FindAsync(id);
+            return list;
+        }
+        public async Task<int> AddSchedule(ScheduleModel scheduleModel)
+        {
+            int ret = 0;
+            try
+            {
+                var subject = await _context.SubjectModels.FindAsync(scheduleModel.ScheduleClassId);
+                var classs = await _context.ClassModels.FindAsync(scheduleModel.ScheduleClassId);
+                var teacher = await _context.UserModels.FindAsync(scheduleModel.ScheduleUser);
+
+                scheduleModel.ScheduleTeacherCode = teacher.UserTeacherCode;
+                scheduleModel.ScheduleTeacherName = teacher.UserFisrtName;
+                scheduleModel.ScheduleClassName = classs.ClassName;
+                //scheduleModel.ScheduleSubjectName = subject.SubjectName;
+
+
+                await _context.AddAsync(scheduleModel);
+                await _context.SaveChangesAsync();
+                ret = scheduleModel.ScheduleId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<bool> EditSchedule(ScheduleModel scheduleModel)
+        {
+
+            //int ret = 0;
+            //try
+            //{
+            //    ScheduleModel schedule = null;
+            //    schedule = await ScheduleId(scheduleModel.ScheduleId);
+
+            //    var subject = await _context.SubjectModels.FindAsync(scheduleModel.ScheduleClassId);
+            //    var classs = await _context.ClassModels.FindAsync(scheduleModel.ScheduleClassId);
+            //    var teacher = await _context.UserModels.FindAsync(scheduleModel.ScheduleUser);
+
+
+            //    schedule.ScheduleTeacherCode = teacher.UserTeacherCode;
+            //    schedule.ScheduleTeacherName = teacher.UserFisrtName;
+            //    schedule.ScheduleClassName = classs.ClassName;
+
+            //    //schedule.ScheduleSubjectName = subject.SubjectName;
+            //    schedule.ScheduleRoom = scheduleModel.ScheduleRoom;
+            //    schedule.ScheduleTime = scheduleModel.ScheduleTime;
+            //    schedule.ScheduleOn = scheduleModel.ScheduleOn;
+            //    schedule.ScheduleStartDate = scheduleModel.ScheduleStartDate;
+            //    schedule.ScheduleEndDate = scheduleModel.ScheduleEndDate;
+            //    schedule.Schedule = scheduleModel.Schedule;
+
+            //    _context.Update(schedule);
+            //    await _context.SaveChangesAsync();
+            //    ret = scheduleModel.ScheduleId;
+            //}
+            //catch (Exception ex)
+            //{
+            //    ret = 0;
+            //}
+            //return ret;
+
+            _context.Update(scheduleModel);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<int> DeleteSchedule(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var schedule = await ScheduleId(id);
+                _context.Remove(schedule);
+                await _context.SaveChangesAsync();
+                ret = schedule.ScheduleId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        //ngày nghỉ
+        public async Task<List<ScheduleHoliday>> GetScheduleHoliday()
+        {
+            var ScheduleHoliday = await _context.ScheduleHolidays.ToListAsync();
+            return ScheduleHoliday;
+        }
+
+        public async Task<List<ScheduleHoliday>> ScheduleHolidayId(ScheduleHoliday scheduleHoliday)
+        {
+            var schedule = await _context.ScheduleHolidays.Where(s => s.ScheduleHolidayName == scheduleHoliday.ScheduleHolidayName ||
+                                            s.ScheduleHolidayReason == scheduleHoliday.ScheduleHolidayReason).ToListAsync();
+            return schedule;
+        }
+
+        public async Task<ScheduleHoliday> ScheduleHolidayId(int id)
+        {
+            ScheduleHoliday scheduleHoliday = null;
+            scheduleHoliday = await _context.ScheduleHolidays.FindAsync(id);
+            return scheduleHoliday;
+        }
+
+        public async Task<int> AddScheduleHoliday(ScheduleHoliday scheduleHoliday)
+        {
+            int ret = 0;
+            try
+            {
+                await _context.AddAsync(scheduleHoliday);
+                await _context.SaveChangesAsync();
+                ret = scheduleHoliday.ScheduleHolidayId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
+        public async Task<bool> EditScheduleHoliday(ScheduleHoliday scheduleHoliday)
+        {
+
+            _context.Update(scheduleHoliday);
+            await _context.SaveChangesAsync();
+            return true;
+            //int ret = 0;
+            //try
+            //{
+            //    ScheduleHoliday schedule = null;
+            //    schedule = await ScheduleHolidayId(scheduleHoliday.ScheduleHolidayId);
+
+            //    schedule.ScheduleHolidayName = scheduleHoliday.ScheduleHolidayName;
+            //    schedule.ScheduleHolidayReason = scheduleHoliday.ScheduleHolidayReason;
+            //    schedule.ScheduleHolidayStartDate = scheduleHoliday.ScheduleHolidayStartDate;
+            //    schedule.ScheduleHolidayEndDate = scheduleHoliday.ScheduleHolidayEndDate;
+
+            //    _context.Update(schedule);
+            //    await _context.SaveChangesAsync();
+            //    ret = schedule.ScheduleHolidayId;
+            //}
+            //catch (Exception ex)
+            //{
+            //    ret = 0;
+            //}
+            //return ret;
+        }
+
+        public async Task<int> DeleteScheduleHoliday(int id)
+        {
+            int ret = 0;
+            try
+            {
+                var scheduleHoliday = await ScheduleHolidayId(id);
+                _context.Remove(scheduleHoliday);
+                await _context.SaveChangesAsync();
+                ret = scheduleHoliday.ScheduleHolidayId;
+            }
+            catch (Exception ex)
+            {
+                ret = 0;
+            }
+            return ret;
+        }
+
         //
+
+
     }
 }

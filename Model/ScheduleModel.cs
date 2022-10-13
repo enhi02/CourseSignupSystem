@@ -20,6 +20,10 @@ namespace CourseSignupSystem.Models
         public int ScheduleClassId { get; set; }
 
         [StringLength(50)]
+        [Display(Name = "Mã Giáo Viên")]
+        public string ScheduleTeacherCode { get; set; }
+
+        [StringLength(50)]
         [Display(Name = "Tên Giáo Viên")]
         public string ScheduleTeacherName { get; set; }
 
